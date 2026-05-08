@@ -1,0 +1,11 @@
+<%- include("components/header"); %>
+<div>
+        <h1 class="mx-auto p-2" style="width: 200px;">Sign up</h1>
+        <form class="mx-auto p-2" style="width: 200px;" method="post" action="/signupSubmit">
+            <input type="text" name="username" id="username" placeholder="username"></input>
+            <input type="email" name="email" id="email" placeholder="email"></input>
+            <input type="password" name="password" id="password" placeholder="password"></input>
+            <button class="m-1 w-100 btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <%- include("components/footer"); %>

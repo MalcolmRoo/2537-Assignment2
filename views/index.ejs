@@ -1,15 +1,15 @@
 <%- include("components/header"); %>
-<% if(!req.session.authenticated){ %>
-        <div>
+<% if(!locals.authenticated){ %>
+        <div class="mx-auto p-2" style="width: 200px;">
             <h1>My Site</h1>
-            <a href="/login"><button>Login</button></a>
-            <a href="/signup"><button>Sign Up</button></a>
+            <a href="/login"><button class="btn btn-primary">Login</button></a>
+            <a href="/signup"><button class="btn btn-primary">Sign Up</button></a>
         </div>
 <%    } else { %>
-        <div>
-            <h1>Hello, ${req.session.username}</h1>
-            <a href="/members"><button>Members Area</button></a>
-            <a href="/logout"><button>Log Out</button></a>
+        <div class="mx-auto p-2" style="width: 400px;">
+            <h1>Hello, <%- locals.username %></h1>
+            <a href="/members"><button class="btn btn-primary">Members Area</button></a>
+            <a href="/logout"><button class="btn btn-primary">Log Out</button></a>
         </div>
 <%    } %>
 <%- include("components/footer"); %>

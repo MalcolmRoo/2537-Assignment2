@@ -51,34 +51,18 @@ app.use(session({
 
 //Routes
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', {
+        authenticated: req.session.authenticated,
+        username: req.session.username
+    });
 });
 
 app.get('/login', (req, res) => {
-    res.send(`
-        <div>
-            <h1>Login</h1>
-            <form method="post" action="/loginSubmit">
-                <input type="email" name="email" id="email" placeholder="email"></input>
-                <input type="password" name="password" id="password" placeholder="password"></input>
-                <button>Login</button>
-            </form>
-        </div>
-        `);
+    res.render('login');
 });
 
 app.get('/signup', (req, res) => {
-    res.send(`
-    <div>
-        <h1>Sign up</h1>
-        <form method="post" action="/signupSubmit">
-            <input type="text" name="username" id="username" placeholder="username"></input>
-            <input type="email" name="email" id="email" placeholder="email"></input>
-            <input type="password" name="password" id="password" placeholder="password"></input>
-            <button>Submit</button>
-        </form>
-    </div>
-        `);
+    res.render('signup');
 });
 
 app.post('/loginSubmit', async (req, res) => {
@@ -168,44 +152,22 @@ app.post('/signupSubmit', async (req, res) => {
 });
 
 app.get('/members', (req,res) => {
-    var html = "";
-    let num = Math.floor(Math.random() * 3);
-    if(!req.session.authenticated){
-        html = `
-            <p>You are not logged in</p>
-            <a href="/"><button>return to home</button></a>
-        `;
-    } else {
-        html = `
-        <p> Hello ${req.session.username}!!</p>`;
-        if(num === 0){
-            html += `<img src="/fluffy.gif"/>`;
-        } else if (num === 1){
-            html += `<img src="/socks.gif"/>`;
-        } else if (num === 2){
-            html += `<img src="/crunchy.gif"/>`;
-        }
-        
-        html += `</br><a href="/logout"><button>Logout</button></a>
-        `;
-    }
-    res.send(html);
+    res.render('members', {
+        authenticated: req.session.authenticated,
+        username: req.session.username
+    });
 });
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.send(`
-        <p>You are logged out</p>
-        <a href="/"><button>home</button></a>
-        `);
+    res.render('logout');
 });
 
 app.use(express.static(__dirname + "/public"));
 
 app.use((req, res) => {
     res.status(404);
-    res.send(`<h1>Page not Found - 404</h1>
-            <a href="/"><button>Home</button></a>`);
+    res.render('404');
 })
 
 //Start Server

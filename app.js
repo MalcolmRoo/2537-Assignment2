@@ -1,4 +1,4 @@
-// require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
+require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
 require("./utils.js");
 require('dotenv').config();
 const express = require('express');
@@ -23,7 +23,7 @@ const mongodb_user_database = process.env.USER_DB;
 
 const node_session_secret = process.env.NODE_SECRET;
 
-
+app.set('view engine', 'ejs');
 
 const {database} = include('databaseConnection');
 const userCollection = database.db(mongodb_user_database).collection('users');
@@ -51,25 +51,7 @@ app.use(session({
 
 //Routes
 app.get('/', (req, res) => {
-    var html = "";
-    if(!req.session.authenticated){
-        html = `
-        <div>
-            <h1>My Site</h1>
-            <a href="/login"><button>Login</button></a>
-            <a href="/signup"><button>Sign Up</button></a>
-        </div>
-        `;
-    } else {
-        html = `
-        <div>
-            <h1>Hello, ${req.session.username}</h1>
-            <a href="/members"><button>Members Area</button></a>
-            <a href="/logout"><button>Log Out</button></a>
-        </div>
-        `;
-    }
-    res.send(html);
+    res.render('index');
 });
 
 app.get('/login', (req, res) => {

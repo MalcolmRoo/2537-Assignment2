@@ -1,4 +1,4 @@
-// require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
+require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
 require("./utils.js");
 require('dotenv').config();
 const express = require('express');
@@ -48,6 +48,39 @@ app.use(session({
     saveUninitialized: false,
     resave: true
 }));
+
+//Middleware
+function isValidSession(req) {
+    if (req.session.authenticated){
+        return true;
+    }
+    return false;
+}
+
+function sessionValidation(req, res, next) {
+    if(isValidSession(req)) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
+function isAdmin(req) {
+    if(req.session.userType == 'admin'){
+        return true;
+    }
+    return false;
+}
+
+function adminAuthorization(req, res, next) {
+    if(!isAdmin(req)){
+        res.status(403);
+        res.render("components/errorMessage", {error: "Not Authorized", status: 403});
+        return;
+    } else {
+        next();
+    }
+}
 
 //Routes
 app.get('/', (req, res) => {
@@ -153,20 +186,15 @@ app.post('/signupSubmit', async (req, res) => {
     res.send(html);
 });
 
-app.get('/members', (req,res) => {
+app.get('/members', sessionValidation, (req,res) => {
     res.render('members', {
         authenticated: req.session.authenticated,
         username: req.session.username
     });
 });
 
-app.get('/admin', async (req,res) => {
-
+app.get('/admin', sessionValidation, adminAuthorization, async (req,res) => {
     const result = await userCollection.find().toArray();
-
-    if(!result[0].userType === "admin"){
-        res.status(403);
-    }
     
     res.render('admin', {
         authenticated: req.session.authenticated,
@@ -176,7 +204,7 @@ app.get('/admin', async (req,res) => {
     });
 });
 
-app.get('/changeUserType', async (req,res) => {
+app.get('/changeUserType', sessionValidation, adminAuthorization, async (req,res) => {
     const data = req.query.action;
 
     if(data){

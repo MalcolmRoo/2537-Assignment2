@@ -1,33 +1,19 @@
 <%- include("components/header"); %>
-<% if(!authenticated){ %>
-        <p class="mx-auto p-2" style="width: 200px;">You are not logged in</p>
-        <script>
-        window.location.href = "/login";
-        </script>
-</a>
-   <% } else { %>
-        <div class="container text-center mt-5">
+<div class="container text-center mt-5">
     <p class="h4 mb-4">Hello <%- username %>!!</p>
-
     <div class="row justify-content-center mb-4">
-
-    <div class="col-12 col-md-4 mb-3">
-        <img class="img-fluid rounded" src="/fluffy.gif" alt="fluffy"/>
+        <div class="col-12 col-md-4 mb-3">
+            <img class="img-fluid rounded" src="/fluffy.gif" alt="fluffy"/>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+            <img class="img-fluid rounded" src="/socks.gif" alt="socks"/>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+            <img class="img-fluid rounded" src="/crunchy.gif" alt="crunchy"/>
+        </div>
     </div>
-
-    <div class="col-12 col-md-4 mb-3">
-        <img class="img-fluid rounded" src="/socks.gif" alt="socks"/>
-    </div>
-
-    <div class="col-12 col-md-4 mb-3">
-        <img class="img-fluid rounded" src="/crunchy.gif" alt="crunchy"/>
-    </div>
-
-</div>
     <a href="/logout">
         <button class="btn btn-danger px-4">Logout</button>
     </a>
 </div>
-
-    <% } %>
 <%- include("components/footer"); %>

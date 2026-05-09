@@ -1,4 +1,9 @@
 <%- include("components/header"); %>
+<% if(!authenticated) { %>
+    <script>
+        window.location.href = "/login";
+    </script>
+<% } %>
 <% if(userType === "admin"){ %>
 <div class="mx-auto p-2" style="width: 300px;">
     <%- include("components/user"); %>

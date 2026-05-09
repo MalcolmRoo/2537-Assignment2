@@ -1,0 +1,8 @@
+<form method="get" action="/changeUserType">
+    <% for(i = 0; i < result.length; i++) { %>
+        <p style="display: inline; font-size: 15pt;"><%- result[i].username %> </p> 
+        <% if(result[i].userType === "admin") {%> <p style="display: inline; font-size: 12pt;"> (Admin)</p> <%} else {%> <p style="display: inline; font-size: 12pt;"> (User)</p> <%}  %> 
+        <% if(result[i].userType === "admin") {%> <button name="action" value="demote_<%- result[i].username %>" class="btn btn-danger p-0">Demote to User</button> <%} 
+        else {%> <button name="action" value="promote_<%- result[i].username %>" class="btn btn-primary p-0" >Promote to Admin</button> <%}  %> </br>
+    <% } %>
+</form>

@@ -1,4 +1,4 @@
-require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
+// require('node:dns/promises').setServers(['1.1.1.1', '8.8.8.8']);
 require("./utils.js");
 require('dotenv').config();
 const express = require('express');
@@ -79,7 +79,7 @@ app.post('/loginSubmit', async (req, res) => {
         return;
     }
 
-    const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
+    const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, userType: 1, _id: 1}).toArray();
 
     if(result.length != 1){
         res.send(`
@@ -93,6 +93,7 @@ app.post('/loginSubmit', async (req, res) => {
         req.session.authenticated = true;
         req.session.username = result[0].username;
         req.session.cookie.maxAge = expireTime;
+        req.session.userType = result[0].userType;
 
         res.redirect("/");
         return;
@@ -138,11 +139,12 @@ app.post('/signupSubmit', async (req, res) => {
         }
 
         var hashedPassword = bcrypt.hashSync(password, saltRounds);
-        await userCollection.insertOne({username: username, email: email, password: hashedPassword});
+        await userCollection.insertOne({username: username, email: email, password: hashedPassword, userType: "user"});
 
         req.session.authenticated = true;
         req.session.username = username;
         req.session.cookie.maxAge = expireTime;
+        req.session.userType = "user";
 
         res.redirect("/members");
         return;
@@ -156,6 +158,36 @@ app.get('/members', (req,res) => {
         authenticated: req.session.authenticated,
         username: req.session.username
     });
+});
+
+app.get('/admin', async (req,res) => {
+
+    const result = await userCollection.find().toArray();
+
+    if(!result[0].userType === "admin"){
+        res.status(403);
+    }
+    
+    res.render('admin', {
+        authenticated: req.session.authenticated,
+        username: req.session.username,
+        userType: req.session.userType,
+        result: result
+    });
+});
+
+app.get('/changeUserType', async (req,res) => {
+    const data = req.query.action;
+
+    if(data){
+        const [type, username] = data.split('_');
+        if (type === 'promote') {
+            await userCollection.updateOne({username: username}, {$set: {userType: "admin"}}); 
+        } else if (type === 'demote') {
+            await userCollection.updateOne({username: username}, {$set: {userType: "user"}}); 
+        }
+    }
+    res.redirect('/admin');
 });
 
 app.get('/logout', (req, res) => {

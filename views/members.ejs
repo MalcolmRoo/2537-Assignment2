@@ -1,12 +1,13 @@
 <%- include("components/header"); %>
-<% let num = Math.floor(Math.random() * 3); %>
-
-<% if(!locals.authenticated){ %>
+<% if(!authenticated){ %>
         <p class="mx-auto p-2" style="width: 200px;">You are not logged in</p>
+        <script>
+        window.location.href = "/login";
+        </script>
 </a>
    <% } else { %>
         <div class="container text-center mt-5">
-    <p class="h4 mb-4">Hello <%- locals.username %>!!</p>
+    <p class="h4 mb-4">Hello <%- username %>!!</p>
 
     <div class="row justify-content-center mb-4">
 

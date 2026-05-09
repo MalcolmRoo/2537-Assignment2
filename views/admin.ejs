@@ -1,0 +1,12 @@
+<%- include("components/header"); %>
+<% if(userType === "admin"){ %>
+<div class="mx-auto p-2" style="width: 300px;">
+    <%- include("components/user"); %>
+</div>
+<% } else { %>
+<div>
+    <h1 class="mx-auto p-2" style="width: 100px;">403</h1>
+    <p class="mx-auto p-2" style="width: 200px;">You are not an admin</p>
+</div>
+<% } %>
+<%- include("components/footer"); %>
